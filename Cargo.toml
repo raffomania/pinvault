@@ -9,3 +9,7 @@ edition = "2018"
 [dependencies]
 actix-web = { version = "2", features = ["rustls"] }
 actix-rt = "1"
+# ipfs-api = { version = "0.6.0-rc", features = ["actix"], default-features = false }
+readability = "0.1"
+bytes = "0.5"
+url = "1"

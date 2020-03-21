@@ -15,15 +15,18 @@ Think pinterest, mastodon, the internet archive and bittorrent mashed up in a si
 The vision outlined above is, at the moment, just a vision. Listed below are the features already implemented, as well as the things that are to come next.
 
 ### 0.1
-- [ ] Simple webextension / bookmarklet
+- [ ] simple webextension / bookmarklet
 - [ ] youtube-dl integration
 - [ ] IPFS integration
 
 ### 0.2
 - [ ] Content tagging
-- [ ] Element Picker for downloads
+- [ ] use a headless browser to connect to pages
+- [ ] simple image extraction heuristic
+- [ ] element Picker for downloads
 
 ### future
+- "Readability"-like article normalization
 - Discover and monitor RSS feeds
 - Element Picker for monitoring changes
 - Automatic content backup on other devices
@@ -35,4 +38,4 @@ The vision outlined above is, at the moment, just a vision. Listed below are the
 - [InterPlanetary Wayback](https://github.com/oduwsdl/ipwb)
 
 ## License
-
+TBD

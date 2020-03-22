@@ -38,4 +38,4 @@ The vision outlined above is, at the moment, just a vision. Listed below are the
 - [InterPlanetary Wayback](https://github.com/oduwsdl/ipwb)
 
 ## License
-TBD
+AGPL3+. See LICENSE file for details.

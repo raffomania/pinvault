@@ -1,11 +1,13 @@
 stages:
   - build
 
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/cargo
+
 cache:
   paths:
-    - ~/.cargo/registry
-    - ~/.cargo/git
-    - ./target
+    - cargo
+    - target
   key: ${CI_COMMIT_REF_SLUG}
 
 rust-latest:

@@ -1,6 +1,13 @@
 stages:
   - build
 
+cache:
+  paths:
+    - ~/.cargo/registry
+    - ~/.cargo/git
+    - ./target
+  key: ${CI_COMMIT_REF_SLUG}
+
 rust-latest:
   stage: build
   image: rust:latest

@@ -16,8 +16,9 @@ The vision outlined above is, at the moment, just a vision. Listed below are the
 
 ### 0.1
 - [ ] simple webextension / bookmarklet
-- [ ] youtube-dl integration
-- [ ] IPFS integration
+- [x] youtube-dl integration
+- [x] IPFS integration
+- [ ] simple web UI for browsing downloads
 
 ### 0.2
 - [ ] Content tagging
@@ -32,6 +33,7 @@ The vision outlined above is, at the moment, just a vision. Listed below are the
 - Automatic content backup on other devices
 - Multi-user installations
 - ActivityPub integration
+- reddit integration
 
 ## Similar Projects
 - [ArchiveBox](https://github.com/pirate/ArchiveBox)

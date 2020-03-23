@@ -1,38 +1,25 @@
-use actix_web::client::{Client, SendRequestError};
-use anyhow::{anyhow, Result};
+use actix_web::client::Client;
+use anyhow::{anyhow, Context, Result};
 use bytes::buf::BufExt;
-use ipfs_api::IpfsClient;
+use duct::cmd;
 use readability::extractor;
-use std::{
-    process::{Command, Stdio},
-};
 use url::Url;
 
-pub async fn ytdl(url: &String) -> Result<String> {
-    let ipfs = IpfsClient::default();
-
-    let child = Command::new("youtube-dl")
-        .args(&["-o", "-"])
-        .arg(url)
-        .stdout(Stdio::piped())
-        .spawn()?;
-
-    match ipfs
-        .add(child.stdout.ok_or(anyhow!("couldn't get ytdl stdout"))?)
-        .await
-    {
-        Ok(res) => Ok(res.hash),
-        Err(e) => {
-            println!("{:?}", e);
-            Err(anyhow!("couldn't add to ipfs"))
-        }
-    }
+pub async fn ytdl(url: &str) -> Result<String> {
+    cmd!("youtube-dl", "-o", "-", url)
+        .pipe(cmd!("ipfs", "add", "--"))
+        .read()
+        .context("failed to run command")
 }
 
-pub async fn readability(url: &String) -> Result<(), SendRequestError> {
+pub async fn readability(url: &str) -> Result<String> {
     let client = Client::default();
 
-    let mut response = client.get(url).send().await?;
+    let mut response = client
+        .get(url)
+        .send()
+        .await
+        .map_err(|_| anyhow!("couldn't fetch page"))?;
 
     let status = response.status();
     println!("status {}", status);
@@ -41,6 +28,8 @@ pub async fn readability(url: &String) -> Result<(), SendRequestError> {
 
     let extracted = extractor::extract(&mut body.reader(), &Url::parse(url).unwrap()).unwrap();
 
-    println!("{:?}", extracted.text);
-    Ok(())
+    cmd!("ipfs", "add", "--")
+        .stdin_bytes(extracted.text)
+        .read()
+        .context("failed to add to ipfs")
 }

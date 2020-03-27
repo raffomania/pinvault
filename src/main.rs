@@ -15,6 +15,7 @@ mod cli;
 async fn main() {
     let opt = cli::Opt::from_args();
     dotenv::dotenv().ok();
+    let conn = db::establish_connection();
 
     match opt {
         cli::Opt::Download { url } => {
@@ -25,12 +26,21 @@ async fn main() {
                 println!("youtube-dl failed, using readability fallback...");
                 download::readability(&url).await.unwrap()
             };
-            println!("hash: {}", hash);
+            let file = models::File {
+                title: "Placeholder".into(),
+                url,
+                hash: hash.clone(),
+            };
+
+            diesel::insert_into(schema::files::table)
+                .values(&file)
+                .execute(&conn)
+                .expect("Error saving file to DB");
+            println!("Downloaded successfully! view file at http://localhost:8080/ipfs/{}", hash);
         },
         cli::Opt::List => {
-            let connection = db::establish_connection();
             let results = schema::files::table
-                .load::<models::File>(&connection)
+                .load::<models::File>(&conn)
                 .expect("Error loading files");
             for file in results {
                 println!("{} - http://localhost:8080/ipfs/{}", file.title, file.hash);

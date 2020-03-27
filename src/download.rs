@@ -7,7 +7,7 @@ use url::Url;
 
 pub async fn ytdl(url: &str) -> Result<String> {
     cmd!("youtube-dl", "-o", "-", url)
-        .pipe(cmd!("ipfs", "add", "--"))
+        .pipe(cmd!("ipfs", "add", "--quiet", "--"))
         .read()
         .context("failed to run command")
 }

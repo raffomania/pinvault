@@ -11,6 +11,7 @@ mod db;
 mod models;
 mod schema;
 mod cli;
+mod web;
 
 #[actix_rt::main]
 async fn main() {
@@ -47,6 +48,9 @@ async fn main() {
             for file in results {
                 println!("{} - http://localhost:8080/ipfs/{}", file.title, file.hash);
             }
+        },
+        cli::Opt::Server => {
+            web::start_server().await.expect("failed to start server");
         }
     }
 }

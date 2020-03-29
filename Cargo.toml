@@ -8,14 +8,17 @@ license = "AGPL-3.0-or-later"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = { version = "2", features = ["rustls"] }
-actix-rt = "1"
+actix-web = { version = "2.0.0", features = ["rustls"] }
+actix-rt = "1.0.0"
 readability = "0.1"
 bytes = "0.5"
 url = "1"
-anyhow = "1"
+anyhow = "1.0.27"
 duct = "0.13.3"
 diesel = { version = "1.4", features = ["sqlite"] }
 dotenv = "0.15.0"
 structopt = "0.3.12"
 clap = "2.33.0"
+askama = { version = "0.9.0", features = ["with-actix-web"] }
+thiserror = "1.0.13"
+futures = "0.3.4"

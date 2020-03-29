@@ -5,6 +5,7 @@ use structopt::StructOpt;
 use dotenv;
 use diesel::prelude::*;
 
+mod sql_types;
 mod download;
 mod db;
 mod models;
@@ -30,6 +31,7 @@ async fn main() {
                 title: "Placeholder".into(),
                 url,
                 hash: hash.clone(),
+                file_type: sql_types::FileType::Video
             };
 
             diesel::insert_into(schema::files::table)

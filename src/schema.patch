@@ -1,0 +1,15 @@
+diff --git a/src/schema.rs b/src/schema.rs
+index 70cef51..5ed8879 100644
+--- a/src/schema.rs
++++ b/src/schema.rs
+@@ -3,9 +3,9 @@ table! {
+     use crate::sql_types::*;
+ 
+     files (hash) {
+         hash -> Text,
+         title -> Text,
+         url -> Text,
+-        file_type -> Text,
++        file_type -> FileTypeMapping,
+     }
+ }

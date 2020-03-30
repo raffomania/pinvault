@@ -3,10 +3,13 @@
 {% block content %}
     {% for file in files %}
         <br/> <br/>
-        title: {{ file.title }}
+        <strong>{{ file.title }}</strong> (<a href="{{ file.url }}">{{ file.url }}</a>)
         <br/>
-        url: {{ file.url }}
-        <br/>
-        <a href="http://localhost:8080/ipfs/{{ file.hash }}">{{ file.hash }}</a>
+        {% match file.file_type %}
+        {% when FileType::Video %}
+            <video src="http://localhost:8080/ipfs/{{ file.hash }}" style="width: 70vw;" controls></video>
+        {% else %}
+            <a href="http://localhost:8080/ipfs/{{ file.hash }}">{{ file.hash }}</a>
+        {% endmatch %}
     {% endfor %}
 {% endblock %}

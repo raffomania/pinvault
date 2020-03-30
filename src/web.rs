@@ -8,6 +8,7 @@ use thiserror::Error;
 
 use crate::schema;
 use crate::models::File;
+use crate::sql_types::FileType;
 
 #[derive(Debug, Error)]
 #[error("Internal Server Error")]

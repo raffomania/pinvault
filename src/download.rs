@@ -28,7 +28,7 @@ pub async fn readability(url: &str) -> Result<String> {
 
     let extracted = extractor::extract(&mut body.reader(), &Url::parse(url).unwrap()).unwrap();
 
-    cmd!("ipfs", "add", "--")
+    cmd!("ipfs", "add", "--quiet", "--")
         .stdin_bytes(extracted.text)
         .read()
         .context("failed to add to ipfs")

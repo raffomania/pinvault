@@ -5,7 +5,7 @@ use super::sql_types::FileType;
 #[table_name="files"]
 pub struct File {
     pub hash: String,
-    pub url: String,
     pub title: String,
+    pub url: String,
     pub file_type: FileType
 }

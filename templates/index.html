@@ -1,4 +1,12 @@
-<!doctype html>
-<body>
-    <h1>pinvault</h1>
-</body>
+{% extends "_base.html" %}
+
+{% block content %}
+    {% for file in files %}
+        <br/> <br/>
+        title: {{ file.title }}
+        <br/>
+        url: {{ file.url }}
+        <br/>
+        <a href="http://localhost:8080/ipfs/{{ file.hash }}">{{ file.hash }}</a>
+    {% endfor %}
+{% endblock %}

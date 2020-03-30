@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate diesel;
 
+#[macro_use]
+extern crate anyhow;
+
 use structopt::StructOpt;
 use dotenv;
 use diesel::prelude::*;
@@ -22,17 +25,17 @@ async fn main() {
     match opt {
         cli::Opt::Download { url } => {
             println!("arg {}", url);
-            let hash = if let Ok(hash) = download::ytdl(&url).await {
-                hash
+            let (hash, file_type) = if let Ok(hash) = download::ytdl(&url).await {
+                (hash, sql_types::FileType::Video)
             } else {
                 println!("youtube-dl failed, using readability fallback...");
-                download::readability(&url).await.unwrap()
+                (download::readability(&url).await.unwrap(), sql_types::FileType::Text)
             };
             let file = models::File {
-                title: "Placeholder".into(),
-                url,
                 hash: hash.clone(),
-                file_type: sql_types::FileType::Video
+                url,
+                title: "placeholder".into(),
+                file_type: file_type
             };
 
             diesel::insert_into(schema::files::table)
@@ -50,7 +53,7 @@ async fn main() {
             }
         },
         cli::Opt::Server => {
-            web::start_server().await.expect("failed to start server");
+            web::start_server().await;
         }
     }
 }

@@ -10,8 +10,6 @@ license = "AGPL-3.0-or-later"
 [dependencies]
 actix-web = { version = "2.0.0", features = ["rustls"] }
 actix-rt = "1.0.0"
-readability = "0.1"
-bytes = "0.5"
 url = "1"
 anyhow = "1.0.27"
 duct = "0.13.3"

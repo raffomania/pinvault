@@ -24,30 +24,15 @@ async fn main() {
 
     match opt {
         cli::Opt::Download { url } => {
-            println!("arg {}", url);
-            let (hash, file_type) = if let Ok(hash) = download::ytdl(&url).await {
-                (hash, sql_types::FileType::Video)
-            } else {
-                println!("youtube-dl failed, using readability fallback...");
-                (
-                    download::readability(&url).await.unwrap(),
-                    sql_types::FileType::Text,
-                )
-            };
-            let file = models::File {
-                hash: hash.clone(),
-                url,
-                title: "placeholder".into(),
-                file_type: file_type,
-            };
-
+            println!("downloading {}", url);
+            let file = download::ytdl(&url).await.expect("Error downloading file");
             diesel::insert_into(schema::files::table)
                 .values(&file)
                 .execute(&conn)
                 .expect("Error saving file to DB");
             println!(
                 "Downloaded successfully! view file at http://localhost:8080/ipfs/{}",
-                hash
+                file.hash
             );
         }
         cli::Opt::List => {

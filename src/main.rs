@@ -4,16 +4,16 @@ extern crate diesel;
 #[macro_use]
 extern crate anyhow;
 
-use structopt::StructOpt;
-use dotenv;
 use diesel::prelude::*;
+use dotenv;
+use structopt::StructOpt;
 
-mod sql_types;
-mod download;
+mod cli;
 mod db;
+mod download;
 mod models;
 mod schema;
-mod cli;
+mod sql_types;
 mod web;
 
 #[actix_rt::main]
@@ -29,21 +29,27 @@ async fn main() {
                 (hash, sql_types::FileType::Video)
             } else {
                 println!("youtube-dl failed, using readability fallback...");
-                (download::readability(&url).await.unwrap(), sql_types::FileType::Text)
+                (
+                    download::readability(&url).await.unwrap(),
+                    sql_types::FileType::Text,
+                )
             };
             let file = models::File {
                 hash: hash.clone(),
                 url,
                 title: "placeholder".into(),
-                file_type: file_type
+                file_type: file_type,
             };
 
             diesel::insert_into(schema::files::table)
                 .values(&file)
                 .execute(&conn)
                 .expect("Error saving file to DB");
-            println!("Downloaded successfully! view file at http://localhost:8080/ipfs/{}", hash);
-        },
+            println!(
+                "Downloaded successfully! view file at http://localhost:8080/ipfs/{}",
+                hash
+            );
+        }
         cli::Opt::List => {
             let results = schema::files::table
                 .load::<models::File>(&conn)
@@ -51,7 +57,7 @@ async fn main() {
             for file in results {
                 println!("{} - http://localhost:8080/ipfs/{}", file.title, file.hash);
             }
-        },
+        }
         cli::Opt::Server => {
             web::start_server().await;
         }

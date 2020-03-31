@@ -1,8 +1,8 @@
-use diesel::deserialize::{self, FromSql};
-use diesel::sqlite::{Sqlite};
-use diesel::serialize::{self, IsNull, Output, ToSql};
-use diesel::*;
 use diesel::backend::Backend;
+use diesel::deserialize::{self, FromSql};
+use diesel::serialize::{self, IsNull, Output, ToSql};
+use diesel::sqlite::Sqlite;
+use diesel::*;
 use std::io::Write;
 
 #[derive(SqlType)]
@@ -54,4 +54,3 @@ impl diesel::sql_types::HasSqlType<FileTypeMapping> for Sqlite {
 //         FromSql::<#diesel_mapping, Sqlite>::from_sql(row.take())
 //     }
 // }
-

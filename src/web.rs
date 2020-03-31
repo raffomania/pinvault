@@ -1,13 +1,13 @@
 use actix_web::{guard, middleware, web, App, HttpResponse, HttpServer, Responder};
-use anyhow::{Context, self};
+use anyhow::{self, Context};
 use askama::Template;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use std::env;
 use thiserror::Error;
 
-use crate::schema;
 use crate::models::File;
+use crate::schema;
 use crate::sql_types::FileType;
 
 #[derive(Debug, Error)]
@@ -26,11 +26,9 @@ struct Index {
 
 async fn index(pool: web::Data<DbPool>) -> Result<impl Responder, AppError> {
     let conn = pool.get().context("db connection")?;
-    let files = web::block(move || {
-        schema::files::table
-            .load::<File>(&conn)
-    }).await
-      .map_err(|_e| anyhow!("load user"))?;
+    let files = web::block(move || schema::files::table.load::<File>(&conn))
+        .await
+        .map_err(|_e| anyhow!("load user"))?;
     Ok(Index { files })
 }
 

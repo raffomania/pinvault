@@ -16,6 +16,7 @@ struct Index {
     files: Vec<File>,
 }
 
+#[get("/")]
 pub async fn index(pool: web::Data<DbPool>) -> Result<impl Responder, AppError> {
     let conn = pool.get().context("db connection")?;
     let files = web::block(move || schema::files::table.load::<File>(&conn))
@@ -30,6 +31,7 @@ pub struct AddQueryParams {
     title: String,
 }
 
+#[get("/add")]
 pub async fn add_file(
     pool: web::Data<DbPool>,
     web::Query(params): web::Query<AddQueryParams>,
@@ -53,8 +55,27 @@ pub async fn add_file(
 #[template(path = "added.html")]
 struct AddedTemplate;
 
+#[get("/added")]
 pub async fn added_file() -> impl Responder {
     AddedTemplate
+}
+
+#[derive(Template)]
+#[template(path = "file.html")]
+struct FileTemplate {
+    file: File,
+}
+
+#[get("/file/{hash}")]
+pub async fn show_file(
+    pool: web::Data<DbPool>,
+    path: web::Path<(String,)>,
+) -> Result<impl Responder, AppError> {
+    let conn = pool.get().context("db connection")?;
+    let file = web::block(move || schema::files::table.find(&path.0).first(&conn))
+        .await
+        .map_err(|_| anyhow!("find file"))?;
+    Ok(FileTemplate { file })
 }
 
 pub async fn p404() -> impl Responder {

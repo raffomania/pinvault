@@ -4,13 +4,6 @@
     Bookmarklet: <a href="javascript: {% include "bookmarklet.js" %}">Add to pinvault</a>
     {% for file in files %}
         <br/> <br/>
-        <strong>{{ file.title }}</strong> (<a href="{{ file.url }}">{{ file.url }}</a>)
-        <br/>
-        {% match file.file_type %}
-        {% when FileType::Video %}
-            <video src="http://localhost:8080/ipfs/{{ file.hash }}" controls></video>
-        {% else %}
-            <a href="http://localhost:8080/ipfs/{{ file.hash }}">{{ file.hash }}</a>
-        {% endmatch %}
+        {% include "_file.html" %}
     {% endfor %}
 {% endblock %}

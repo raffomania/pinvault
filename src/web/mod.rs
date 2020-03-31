@@ -28,9 +28,10 @@ pub async fn start_server() {
         App::new()
             .data(pool.clone())
             .wrap(middleware::Logger::default())
-            .service(web::resource("/").route(web::get().to(handlers::index)))
-            .service(web::resource("/add").route(web::get().to(handlers::add_file)))
-            .service(web::resource("/added").route(web::get().to(handlers::added_file)))
+            .service(handlers::index)
+            .service(handlers::show_file)
+            .service(handlers::add_file)
+            .service(handlers::added_file)
             .service(actix_files::Files::new("/static", "static").show_files_listing())
             .default_service(
                 web::resource("")

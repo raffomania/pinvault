@@ -4,6 +4,9 @@ extern crate diesel;
 #[macro_use]
 extern crate anyhow;
 
+#[macro_use]
+extern crate actix_web;
+
 use diesel::prelude::*;
 use dotenv;
 use structopt::StructOpt;

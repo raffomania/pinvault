@@ -1,7 +1,7 @@
-use anyhow::{Context, Result};
-use duct::cmd;
 use crate::models::File;
 use crate::sql_types::FileType;
+use anyhow::{Context, Result};
+use duct::cmd;
 
 pub async fn ytdl(url: &str) -> Result<File> {
     let hash = cmd!("youtube-dl", "-o", "-", url)

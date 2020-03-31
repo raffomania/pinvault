@@ -1,3 +1,4 @@
+use actix_files;
 use actix_web::{guard, http, middleware, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::{self, Context};
 use askama::Template;
@@ -7,10 +8,10 @@ use serde::Deserialize;
 use std::env;
 use thiserror::Error;
 
+use crate::download;
 use crate::models::File;
 use crate::schema;
 use crate::sql_types::FileType;
-use crate::download;
 
 #[derive(Debug, Error)]
 #[error("Internal Server Error")]
@@ -47,10 +48,12 @@ async fn add_file(
     let file = download::ytdl(&params.url, Some(params.title)).await?;
     let conn = pool.get().context("db connection")?;
     web::block(move || {
-               diesel::insert_into(schema::files::table)
+        diesel::insert_into(schema::files::table)
             .values(&file)
             .execute(&conn)
-    }).await.map_err(|_| anyhow!("save db entry"))?;
+    })
+    .await
+    .map_err(|_| anyhow!("save db entry"))?;
 
     Ok(HttpResponse::Found()
         .header(http::header::LOCATION, "/added")
@@ -84,6 +87,7 @@ pub async fn start_server() {
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::resource("/add").route(web::get().to(add_file)))
             .service(web::resource("/added").route(web::get().to(added_file)))
+            .service(actix_files::Files::new("/static", "static").show_files_listing())
             .default_service(
                 web::resource("").route(web::get().to(p404)).route(
                     web::route()

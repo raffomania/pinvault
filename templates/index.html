@@ -8,7 +8,7 @@
         <br/>
         {% match file.file_type %}
         {% when FileType::Video %}
-            <video src="http://localhost:8080/ipfs/{{ file.hash }}" style="width: 70vw;" controls></video>
+            <video src="http://localhost:8080/ipfs/{{ file.hash }}" controls></video>
         {% else %}
             <a href="http://localhost:8080/ipfs/{{ file.hash }}">{{ file.hash }}</a>
         {% endmatch %}

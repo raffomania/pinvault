@@ -1,0 +1,10 @@
+body {
+     font-family: 'sans-serif';
+     max-width: 80em;
+     margin: 0 auto;
+     padding: 10px;
+}
+
+video {
+    width: 100%;
+}

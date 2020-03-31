@@ -25,7 +25,7 @@ async fn main() {
     match opt {
         cli::Opt::Download { url } => {
             println!("downloading {}", url);
-            let file = download::ytdl(&url).await.expect("Error downloading file");
+            let file = download::ytdl(&url, None).await.expect("Error downloading file");
             diesel::insert_into(schema::files::table)
                 .values(&file)
                 .execute(&conn)

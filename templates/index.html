@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 
 {% block content %}
+    Bookmarklet: <a href="javascript: {% include "bookmarklet.js" %}">Add to pinvault</a>
     {% for file in files %}
         <br/> <br/>
         <strong>{{ file.title }}</strong> (<a href="{{ file.url }}">{{ file.url }}</a>)

@@ -3,7 +3,7 @@ use crate::sql_types::FileType;
 use anyhow::{Context, Result};
 use duct::cmd;
 
-pub async fn ytdl(url: &str) -> Result<File> {
+pub async fn ytdl(url: &str, title: Option<String>) -> Result<File> {
     let hash = cmd!("youtube-dl", "-o", "-", url)
         .pipe(cmd!("ipfs", "add", "--quiet", "--"))
         .read()
@@ -12,7 +12,7 @@ pub async fn ytdl(url: &str) -> Result<File> {
     Ok(File {
         hash: hash.clone(),
         url: url.into(),
-        title: "placeholder".into(),
+        title: title.unwrap_or("unknown title".into()),
         file_type: FileType::Video,
     })
 }

@@ -1,4 +1,7 @@
-<a href="/file/{{ file.hash }}"><strong>{{ file.title }}</strong></a> (<a href="{{ file.url }}">{{ file.url }}</a>)
+<a href="{{ req|url_for("hash_file", [file.hash.clone()]) }}">
+    <strong>{{ file.title }}</strong>
+</a>
+(<a href="{{ file.url }}">{{ file.url }}</a>)
 <br/>
 {% match file.file_type %}
 {% when FileType::Video %}

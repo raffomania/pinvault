@@ -1,9 +1,10 @@
-use actix_web::{http, web, HttpResponse, Responder};
+use actix_web::{http, web, HttpRequest, HttpResponse, Responder};
 use anyhow::{self, Context};
 use askama::Template;
 use diesel::prelude::*;
 use serde::Deserialize;
 
+use super::filters;
 use super::{AppError, DbPool};
 use crate::download;
 use crate::models::File;
@@ -14,15 +15,16 @@ use crate::sql_types::FileType;
 #[template(path = "index.html")]
 struct Index {
     files: Vec<File>,
+    req: HttpRequest,
 }
 
 #[get("/")]
-pub async fn index(pool: web::Data<DbPool>) -> Result<impl Responder, AppError> {
+pub async fn index(req: HttpRequest, pool: web::Data<DbPool>) -> Result<impl Responder, AppError> {
     let conn = pool.get().context("db connection")?;
     let files = web::block(move || schema::files::table.load::<File>(&conn))
         .await
         .map_err(|_| anyhow!("load user"))?;
-    Ok(Index { files })
+    Ok(Index { files, req })
 }
 
 #[derive(Deserialize)]
@@ -64,18 +66,20 @@ pub async fn added_file() -> impl Responder {
 #[template(path = "file.html")]
 struct FileTemplate {
     file: File,
+    req: HttpRequest,
 }
 
-#[get("/file/{hash}")]
-pub async fn show_file(
+#[get("/file/hash/{hash}")]
+pub async fn hash_file(
     pool: web::Data<DbPool>,
     path: web::Path<(String,)>,
+    req: HttpRequest,
 ) -> Result<impl Responder, AppError> {
     let conn = pool.get().context("db connection")?;
     let file = web::block(move || schema::files::table.find(&path.0).first(&conn))
         .await
         .map_err(|_| anyhow!("find file"))?;
-    Ok(FileTemplate { file })
+    Ok(FileTemplate { file, req })
 }
 
 pub async fn p404() -> impl Responder {

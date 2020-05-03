@@ -24,4 +24,4 @@ r2d2 = "0.8.8"
 serde = "1.0.105"
 actix-files = "0.2.1"
 crossbeam = "0.7.3"
-
+uuid = { version = "0.8.1", features = ["v4"] }

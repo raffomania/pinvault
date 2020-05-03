@@ -1,3 +1,4 @@
+use crate::download;
 use actix_files;
 use actix_web::{guard, middleware, web, App, HttpResponse, HttpServer};
 use anyhow::{self};
@@ -15,7 +16,7 @@ pub struct AppError(#[from] anyhow::Error);
 
 impl actix_web::error::ResponseError for AppError {}
 
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 pub async fn start_server() {
     let db_url = env::var("DATABASE_URL").expect("Please set DATABASE_URL");
@@ -25,9 +26,12 @@ pub async fn start_server() {
         .build(manager)
         .expect("Failed to create DB connection pool");
 
+    let downloader = download::start_download_thread();
+
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())
+            .data(downloader.clone())
             .wrap(middleware::Logger::default())
             .service(handlers::index)
             .service(handlers::hash_file)

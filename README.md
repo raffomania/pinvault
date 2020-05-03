@@ -15,10 +15,11 @@ Think pinterest, mastodon, the internet archive and bittorrent mashed up in a si
 The vision outlined above is, at the moment, just a vision. Listed below are the features already implemented, as well as the things that are to come next.
 
 ### 0.1
-- [ ] simple webextension / bookmarklet
+- [x] simple webextension / bookmarklet
 - [x] youtube-dl integration
 - [x] IPFS integration
-- [ ] simple web UI for browsing downloads
+- [x] simple web UI for browsing downloads
+- [ ] handle downloads in the background
 
 ### 0.2
 - [ ] Content tagging
@@ -46,6 +47,7 @@ Install dependencies:
 - ipfs
 - rust
 - diesel cli: `cargo install diesel_cli`
+- youtube-dl
 
 `cp .env.example .env` and edit it to your liking.
 Create the database using `diesel migration run`.

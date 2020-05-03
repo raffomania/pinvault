@@ -10,6 +10,7 @@ use crate::download;
 use crate::models::File;
 use crate::schema;
 use crate::sql_types::FileType;
+use crossbeam::channel::Sender;
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -30,24 +31,16 @@ pub async fn index(req: HttpRequest, pool: web::Data<DbPool>) -> Result<impl Res
 #[derive(Deserialize)]
 pub struct AddQueryParams {
     url: String,
-    title: String,
 }
 
 #[get("/add")]
 pub async fn add_file(
-    pool: web::Data<DbPool>,
     web::Query(params): web::Query<AddQueryParams>,
+    downloader: web::Data<Sender<download::Msg>>,
 ) -> Result<impl Responder, AppError> {
-    let file = download::ytdl(&params.url, Some(params.title)).await?;
-    let conn = pool.get().context("db connection")?;
-    web::block(move || {
-        diesel::insert_into(schema::files::table)
-            .values(&file)
-            .execute(&conn)
-    })
-    .await
-    .map_err(|_| anyhow!("save db entry"))?;
-
+    downloader
+        .send(download::Msg::Download(params.url))
+        .context("couldnt start download")?;
     Ok(HttpResponse::Found()
         .header(http::header::LOCATION, "/added")
         .finish())

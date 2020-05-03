@@ -39,6 +39,21 @@ The vision outlined above is, at the moment, just a vision. Listed below are the
 - [ArchiveBox](https://github.com/pirate/ArchiveBox)
 - [InterPlanetary Wayback](https://github.com/oduwsdl/ipwb)
 
+## Development Setup
+
+Install dependencies:
+
+- ipfs
+- rust
+- diesel cli: `cargo install diesel_cli`
+
+`cp .env.example .env` and edit it to your liking.
+Create the database using `diesel migration run`.
+Start the ipfs daemon. Pinvault assumes the default IPFS ports for communicating with IPFS.
+
+Try running the pinvault CLI: `cargo run`. You should see a summary of pinvault's available commands.
+To access the web UI, use `cargo run server`.
+
 ## License
 AGPL3+. See LICENSE file for details.
 

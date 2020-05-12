@@ -29,10 +29,12 @@ async fn main() {
         cli::Opt::Download { url } => {
             println!("downloading {}", url);
             let file = download::ytdl(&url).expect("Error downloading file");
+
             diesel::insert_into(schema::files::table)
                 .values(&file)
                 .execute(&conn)
                 .expect("Error saving file to DB");
+
             println!(
                 "Downloaded successfully! view file at http://localhost:8080/ipfs/{}",
                 file.hash

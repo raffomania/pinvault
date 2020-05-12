@@ -20,6 +20,7 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 pub async fn start_server() {
     let db_url = env::var("DATABASE_URL").expect("Please set DATABASE_URL");
+    let port = env::var("PORT").unwrap_or("8000".into());
 
     let manager = ConnectionManager::<SqliteConnection>::new(db_url);
     let pool = r2d2::Pool::builder()
@@ -48,7 +49,7 @@ pub async fn start_server() {
                     ),
             )
     })
-    .bind("127.0.0.1:8000")
+    .bind(format!("127.0.0.1:{}", port))
     .expect("failed to open server socket")
     .run()
     .await

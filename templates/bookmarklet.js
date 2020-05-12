@@ -1,1 +1,1 @@
-location.href = 'http://localhost:8000/add?url=' + encodeURIComponent(location.href);
+location.href = 'http://localhost:{{ port }}/add?url=' + encodeURIComponent(location.href);

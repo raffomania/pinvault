@@ -3,6 +3,7 @@ use anyhow::{self, Context};
 use askama::Template;
 use diesel::prelude::*;
 use serde::Deserialize;
+use std::env;
 
 use super::filters;
 use super::{AppError, DbPool};
@@ -17,6 +18,7 @@ use crossbeam::channel::Sender;
 struct Index {
     files: Vec<File>,
     req: HttpRequest,
+    port: String,
 }
 
 #[get("/")]
@@ -25,7 +27,10 @@ pub async fn index(req: HttpRequest, pool: web::Data<DbPool>) -> Result<impl Res
     let files = web::block(move || schema::files::table.load::<File>(&conn))
         .await
         .map_err(|_| anyhow!("load user"))?;
-    Ok(Index { files, req })
+
+    let port = env::var("PORT").unwrap_or("8000".into());
+
+    Ok(Index { files, req, port })
 }
 
 #[derive(Deserialize)]

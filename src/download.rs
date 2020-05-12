@@ -53,7 +53,7 @@ pub fn handle_messages(sender: Sender<Info>, receiver: Receiver<Msg>) {
             Msg::Download(url) => {
                 download(&pool, &mut downloads, url);
             }
-            RequestInfo => {
+            Msg::RequestInfo => {
                 let downloads: Vec<Download> = downloads.values().cloned().collect();
                 sender.send(Info::Downloads(downloads));
             }

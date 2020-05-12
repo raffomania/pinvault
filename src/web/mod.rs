@@ -27,12 +27,12 @@ pub async fn start_server() {
         .build(manager)
         .expect("Failed to create DB connection pool");
 
-    let downloader = download::start_download_thread();
+    let (download_sender, download_receiver) = download::start_download_thread();
 
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())
-            .data(downloader.clone())
+            .data(download_sender.clone())
             .wrap(middleware::Logger::default())
             .service(handlers::index)
             .service(handlers::hash_file)

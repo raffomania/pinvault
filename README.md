@@ -11,6 +11,11 @@ Think pinterest, mastodon, the internet archive and bittorrent mashed up in a si
 - **Follow anything, anywhere**: Using a few clicks, you can show pinvault how to monitor a webpage for new items and automatically download them, creating your own permanent, universal newsfeed.
 - **Discover**: You can (optionally) set up pinvault on a server to follow other pinvault users and share your own activity!
 
+## Try it out
+
+If you're interested, <a href='ma&#105;l&#116;&#111;&#58;t%72yo%&#55;5&#37;74pinvault&#64;r&#97;fa&#46;ee'>send me an email</a> and I will reply with instructions on how to get pinvault running on your machine.
+If you're tech-savvy, check the section on setting up a development version.
+
 ## Roadmap
 The vision outlined above is, at the moment, just a vision. Listed below are the features already implemented, as well as the things that are to come next.
 

@@ -25,14 +25,14 @@ jobs:
 
       - uses: Swatinem/rust-cache@v1
 
-      - name: Install sqlx-cli
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: sqlx-cli --no-default-features --features postgres
+      # - name: Install sqlx-cli
+      #   uses: actions-rs/cargo@v1
+      #   with:
+      #     command: install
+      #     args: sqlx-cli --no-default-features --features postgres
 
-      - name: Run migrations
-        run: sqlx database reset -y
+      # - name: Run migrations
+      #   run: sqlx database reset -y
 
       - name: cargo build
         uses: actions-rs/cargo@v1

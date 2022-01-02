@@ -8,7 +8,6 @@ extern crate anyhow;
 extern crate actix_web;
 
 use diesel::prelude::*;
-use dotenv;
 use structopt::StructOpt;
 
 mod cli;

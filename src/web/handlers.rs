@@ -28,7 +28,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<DbPool>) -> Result<impl Res
         .await
         .map_err(|_| anyhow!("load user"))?;
 
-    let port = env::var("PORT").unwrap_or("8000".into());
+    let port = env::var("PORT").unwrap_or_else(|_e| "8000".into());
 
     Ok(Index { files, req, port })
 }

@@ -1,5 +1,4 @@
 use crate::download;
-use actix_files;
 use actix_web::{guard, middleware, web, App, HttpResponse, HttpServer};
 use anyhow::{self};
 use diesel::prelude::*;
@@ -20,14 +19,14 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 pub async fn start_server() {
     let db_url = env::var("DATABASE_URL").expect("Please set DATABASE_URL");
-    let port = env::var("PORT").unwrap_or("8000".into());
+    let port = env::var("PORT").unwrap_or_else(|_e| "8000".into());
 
     let manager = ConnectionManager::<SqliteConnection>::new(db_url);
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create DB connection pool");
 
-    let (download_sender, download_receiver) = download::start_download_thread();
+    let (download_sender, _download_receiver) = download::start_download_thread();
 
     HttpServer::new(move || {
         App::new()
